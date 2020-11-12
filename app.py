@@ -231,4 +231,5 @@ def settings():
     return  "todo"
 if __name__ == '__main__':
     # app.run(host='192.168.1.12', port=8082, debug=True, threaded=True)
-    socketio.run(app, host='192.168.1.12', port=8082, debug=True)
+#     socketio.run(app, host='192.168.1.12', port=8082, debug=True)
+    socketio.run(app, debug=True)
