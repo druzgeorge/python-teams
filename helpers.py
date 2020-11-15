@@ -585,6 +585,18 @@ def confirmed_account_deletion(Username):
         c = conn.cursor()
         c.execute(f'''DELETE FROM users WHERE username= :username  ''', (Username,))
         conn.commit()
+        c.execute(f'''DROP TABLE {Username}_calendar''')
+        conn.commit()
+        c.execute(f'''DROP TABLE {Username}_notifications''')
+        conn.commit()
+        c.execute(f'''DROP TABLE {Username}_projects''')
+        conn.commit()
+        conn.close()
+        conn = sqlite3.connect(contacts_db)
+        c = conn.cursor()
+        c.execute(f'''DROP TABLE {Username}_conatcts''')
+        conn.commit()
         conn.close()
     except sqlite3.OperationalError as e:
         print(e)
+
