@@ -1,0 +1,14 @@
+{% extends 'userpage_base_layout.html' %}
+
+{% block title %}
+Update Project
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <form action="/update/{{ id }}" method="POST">
+        <input name="update_project" type="text" placeholder="Update Content">
+        <input name="sumit" type="submit" value="Change">
+    </form>
+</div>
+{% endblock %}

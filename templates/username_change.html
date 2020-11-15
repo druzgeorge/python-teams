@@ -1,0 +1,15 @@
+{% extends 'userpage_base_layout.html' %}
+
+{% block title %}
+    Change Username
+{% endblock %}
+
+{% block body %}
+    <form action="/new_username_change" method="POST">
+    <input type="text" placeholder="Old Username" name="OUsername">
+    <br>
+    <input type="text" placeholder="New Username" name="NUsername">
+    <br>
+    <input type="submit" value="Change Username!">
+    </form>
+{% endblock %}

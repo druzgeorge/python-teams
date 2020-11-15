@@ -1,0 +1,15 @@
+{% extends 'userpage_base_layout.html' %}
+
+{% block title %}
+New event
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+    <form action="/new_event/{{ day }}/{{ month }}/{{ year }}" method="POST">
+        <b>Title:</b><input type="text" placeholder="Title" name="title" required="required">
+        <br>Event:</b><input type="text" placeholder="Event Details" name="event" required="required" class="Event">
+        <input type="submit" value="Save" class="btn btn-primary">
+    </form>
+    </div>
+{% endblock %}

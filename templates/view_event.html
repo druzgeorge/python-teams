@@ -1,0 +1,14 @@
+{% extends 'userpage_base_layout.html' %}
+
+{% block title %}
+View Event
+{% endblock %}
+
+{% block body %}
+     {% for event in events %}
+        <div class="container">
+            <b>Ttitle: </b><h5>{{ event[1] }}</h5>
+            <b>Content: </b><h5>{{ event[2] }}</h5>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -65,9 +65,13 @@
 <div class = "eventslist">
 <h3>My Events</h3>
     <ul>
-        {% for key in month_events.keys() %}
-            <b>Date: {{ key }}</b><br><b> Event: </b><li><a href="/view_event/{{ key }}/{{ month_events[key][4] }}/{{ month_events[key][5] }}">{{ month_events[key][1] }}</li>
-        {% endfor %}
+        {% if month_events %}
+            {% for key in month_events.keys() %}
+                <b>Date: {{ key }}</b><br><b> Event: </b><li><a href="/view_event/{{ key }}/{{ month_events[key][4] }}/{{ month_events[key][5] }}">{{ month_events[key][1] }}</li>
+            {% endfor %}
+        {% else %}
+            <h3>No events here!</h3>
+        {% endif %}
     </ul>
 </div>
 

@@ -39,6 +39,7 @@ def add_user(Fullname, Username, Email, Hash):
     create_calendar_thread = threading.Thread(target=create_user_calender, args=(Username,))
     create_notifications_thread = threading.Thread(target=create_user_notifications, args=(Username,))
     create_user_contacts_thread = threading.Thread(target=create_user_contacts, args=(Username,))
+    create_user_projects_table_thread = threading.Thread(target=create_user_projects_table, args=(Username,))
     try:
         conn = sqlite3.connect(DB)
         c = conn.cursor()
@@ -48,6 +49,7 @@ def add_user(Fullname, Username, Email, Hash):
         create_calendar_thread.start()
         create_notifications_thread.start()
         create_user_contacts_thread.start()
+        create_user_projects_table_thread.start()
     except sqlite3.OperationalError as e:
         print(e)
 
@@ -58,7 +60,7 @@ def create_user_calender(Username):
         conn = sqlite3.connect(DB)
         c = conn.cursor()
         #todo: in calendar layout prompt user that title can contain only 255 characters and also that it cannot be null
-        c.execute(f'''CREATE TABLE IF NOT EXISTS {Username}_calendar(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title VARCHAR(255) NOT NULL, content TEXT NOT NULL)''')
+        c.execute(f'''CREATE TABLE IF NOT EXISTS {Username}_calendar(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title VARCHAR(255) NOT NULL, event TEXT NOT NULL, date_created DATETIME, day INTEGER, month VARCHAR(25), year INTEGER)''')
         conn.commit()
         conn.close()
     except sqlite3.OperationalError as e:
@@ -365,4 +367,224 @@ def delete_notification(Username, notification_id):
         conn.close()
         return
     except sqlite3.OperationalError as e:
-        print()
+        print(e)
+#function to create users projects table in users
+def create_user_projects_table(Username):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(f'''CREATE TABLE IF NOT EXISTS {Username}_projects(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, project TEXT NOT NULL, date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, current_status TEXT NOT NULL DEFAULT "pending", date_completed DATETIME)''')
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        print(e)
+#function to insert projects into user's projects table!
+def add_project(Username,project):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(f'''INSERT INTO {Username}_projects(project) VALUES(?)''',(project,))
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        print(e)
+
+#funtion to retrieve projects from users db
+def retrieve_projects(Username):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(f'''SELECT * FROM {Username}_projects''')
+        projects = list(c.fetchall())
+        conn.close()
+        return projects
+    except sqlite3.OperationalError as e:
+        print(e)
+
+#function to delete projects from db
+def delete_projects(Username, id):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(f'''DELETE FROM {Username}_projects WHERE id = :id''',  (id,))
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        print(e)
+
+#function to update project in db
+def update_project(Username, id, project_update):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        # c.execute(f'''UPDATE {Username}_notifications SET seen = 1 WHERE id = :id''', (notification_id,))
+        c.execute(f'''UPDATE {Username}_projects SET project = :project WHERE id = :id''', (project_update, id))
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        print(e)
+#function to mark task as completed
+def completed_project(Username, id):
+    conn = None
+    try:
+        now = datetime.utcnow()
+        current_status = 'completed'
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        # c.execute(f'''CREATE TABLE IF NOT EXISTS {Username}_projects(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, project TEXT NOT NULL, date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, current_status TEXT NOT NULL DEFAULT "pending", date_completed DATETIME)''')
+        # c.execute(f'''UPDATE {Username}_projects SET current_status = :current_status AND date_completed = :date_completed WHERE id = :id''', (current_status, now, id))
+        c.execute(f'''UPDATE {Username}_projects SET current_status = :current_status  WHERE id = :id''', (current_status, id))
+        conn.commit()
+        c.execute(f'''UPDATE {Username}_projects SET date_completed = :date_completed WHERE id = :id''', (now,id))
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        print(e)
+
+'''CALENDAR METHODS BELOW'''
+
+import calendar
+
+months = ['January', 'February', 'March', 'April', 'May',
+              'June', 'July', 'August', 'September', 'October',
+              'November', 'December']
+
+def retrieve_current_month():
+    now = datetime.utcnow()
+    current_month = months[now.month - 1]
+    return current_month
+
+def retrieve_current_year():
+    now = datetime.utcnow()
+    current_year = now.year
+    return current_year
+
+def retrieve_previous_month(current_month):
+    current_month_index = months.index(current_month)
+    prev_month = months[current_month_index -1]
+    if current_month == months[0]:
+        year = datetime.utcnow().year - 1
+    else:
+        year = datetime.utcnow().year
+    return prev_month, year
+
+def retrieve_next_month(current_month, year):
+    current_month_index = months.index(current_month)
+    try:
+        next_month = months[current_month_index + 1]
+        year = year
+        return next_month, year
+    except IndexError:
+        current_month_index = 0
+        next_month = months[current_month_index]
+        year = year + 1
+        return  next_month, year
+
+def retrieve_month_dates(year, month):
+    month_calendar = calendar.monthcalendar(year=year, month=month)
+    # month_calendar[0].pop(0)
+    return month_calendar
+
+def retrieve_current_month_index(month):
+    current_month_index = int(months.index(month))
+    return current_month_index
+
+def add_new_event(Username,Title, Event, Day, Month, Year):
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        now = datetime.utcnow()
+        c.execute(f'''INSERT INTO {Username}_calendar(title, event, date_created, day, month, year) VALUES(?,?,?,?,?,?)''', (Title, Event, now, Day, Month, Year))
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        print(e)
+
+# function to retrieve all events in a given month.
+#if not month return empty dict
+#else return a dict with key "date": value "Event"
+def retrieve_all_events_in_month(Username, Month):
+    conn = None
+    try:
+        calendar_events = {} #dict
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(f'''SELECT * FROM {Username}_calendar WHERE month = :month''', (Month,))
+        calendar_events_list = list(c.fetchall())
+        conn.close()
+        if calendar_events_list:
+            for calendar_db_entry in calendar_events_list:
+                calendar_events[calendar_db_entry[4]] = calendar_db_entry
+        return calendar_events
+    except sqlite3.OperationalError as e:
+        print(e)
+
+#function to return events on a specific date
+def retrieve_events_on_date(Username, Day,Month,Year):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(f'''SELECT * FROM {Username}_calendar WHERE day = :day AND month = :month AND year = :year ''', (Day,Month,Year))
+        events_list = list(c.fetchall())
+        conn.close()
+        print('events: ', events_list)
+        return events_list
+    except sqlite3.OperationalError as e:
+        print(e)
+
+'''SETTINGS METHODS BELOW'''
+# from werkzeug.security import check_password_hash
+def change_username(old_username, new_username):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(f'''UPDATE users SET username= :new_username WHERE username= :old_username  ''', (new_username, old_username))
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        print(e)
+
+def change_password(old_password, new_password):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(f'''UPDATE USERS SET hash= :new_password  WHERE hash= :old_password ''', (new_password, old_password))
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        print(e)
+
+def password_exists(OldPass):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute('''SELECT hash FROM USERS''')
+        passwords = list(c.fetchall())
+        for passwd in passwords:
+            if OldPass in passwd:
+                return True
+            continue
+        conn.close()
+        return False
+    except sqlite3.OperationalError as e:
+        print(e)
+
+def confirmed_account_deletion(Username):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(f'''DELETE FROM users WHERE username= :username  ''', (Username,))
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        print(e)

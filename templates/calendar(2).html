@@ -1,0 +1,54 @@
+{% extends 'userpage_base_layout.html' %}
+
+{% block title %}
+Calendar
+{% endblock %}
+
+{% block body %}
+    <div class="month">
+  <ul>
+    <li class="prev"><a href="/prev/{{ current_month }}">&#10094;</a></li>
+    <li>{{ current_month }}<br><span style="font-size:18px">{{ current_year }}</span></li>
+      <li class="next"><a href="/next/{{ current_month }}/{{ current_year }}">&#10095;</a></li>
+      <br><li><a href="/current_date">{{ go_back_to_current_date }}</a></li>
+  </ul>
+</div>
+
+<table style="width:100%">
+  <tr>
+    <th>Mon</th>
+    <th>Tue</th>
+    <th>Wed</th>
+    <th>Thur</th>
+    <th>Fri</th>
+    <th>Sat</th>
+    <th>Sun</th>
+    
+  </tr>
+    {% for dates in month_calendar %}
+        <tr>
+            {% for date in dates %}
+                {% if date in month_events.keys() %}
+                    <td class="event_date"><a href="/view_event/{{ date }}/{{ current_month }}/{{ current_year }}">{{ date }}</a></td>
+                {% else %}
+                    <td><a href="/new_event/{{ date }}/{{ current_month }}/{{ current_year }}">{{ date }}</a></td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+
+</table>
+<div class = "eventslist">
+<h3>My Events</h3>
+     <ul>
+        {% if month_events %}
+            {% for key in month_events.keys() %}
+         <b>Date: {{ key }}</b><br><b> Event: </b><li><a href="/view_event/{{ key }}/{{ month_events[key][5] }}/{{ month_events[key][6] }}">{{ month_events[key][2] }}</a></li><br><span></span>
+            {% endfor %}
+        {% else %}
+            <h3>No events here!</h3>
+        {% endif %}
+    </ul>
+</div>
+
+{% endblock %}

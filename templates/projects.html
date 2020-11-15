@@ -1,0 +1,45 @@
+{% extends 'userpage_base_layout.html' %}
+
+{% block title %}
+Projects
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 style="text-align:center;">Projects</h1>
+    {% if tasks %}
+    <table>
+        <tr>
+            <th>Project</th>
+            <th>Added</th>
+            <th>Status</th>
+            <th>Actions</th>
+            <th>Date Completed</th>
+        </tr>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task[1] }}</td><span></span>
+            <td>{{ task[2] }}</td><span></span>
+            <td>{{ task[3] }}</td>
+            <td>
+                <a href="/delete/{{ task[0] }}">Delete</a>
+                <br>
+                <a href="/update/{{ task[0] }}">Update</a>
+                <br>
+                <a href="/completed/{{ task[0] }}">Completed</a>
+            </td>
+            <td>{{ task[4] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <h4 style="text-align: center;">There are no projects yet!Create one!</h4>
+</div>
+    {% endif %}
+    <div>
+        <form action="/projects" method="POST" style="text-align:center;">
+            <input type="text" name="content" id="content">
+            <input type="submit" value="Add project">
+        </form>
+    </div>
+{% endblock %}

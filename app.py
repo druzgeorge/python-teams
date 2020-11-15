@@ -213,12 +213,98 @@ def request_add_user(id):
 @app.route('/projects', methods=['GET', 'POST'])
 @login_required
 def projects():
-    return "todo"
+    if request.method == 'GET':
+        username = session.get('username', None)
+        tasks = helpers.retrieve_projects(Username=username)
+        return render_template('projects.html', tasks=tasks)
+    else:
+        username = session.get('username', None)
+        project = request.form['content']
+        helpers.add_project(Username=username, project=project)
+        return redirect('/projects')
+#route to handle deleting a project
+@app.route('/delete/<int:id>', methods=['GET','POST'])
+def delete(id):
+    username = session.get('username', None)
+    helpers.delete_projects(Username=username, id=id)
+    return redirect('/projects')
+#route to handle updating a project
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
+def update(id):
+    if request.method == 'GET':
+        return render_template('update_project.html', id=id)
+    else:
+        username = session.get('username', None)
+        project_update = request.form['update_project']
+        helpers.update_project(Username=username, id=id, project_update=project_update)
+        return redirect('/projects')
+#completed task access oute
+@app.route('/completed/<int:id>', methods=['GET', 'POST'])
+def completed(id):
+    username = session.get('username', None)
+    helpers.completed_project(Username=username, id=id)
+    return redirect('/projects')
 #calendar
 @app.route('/calendar', methods=['GET', 'POST'])
 @login_required
 def calendar():
-    return "todo"
+    username = session.get('username', None)
+    current_month = helpers.retrieve_current_month()
+    current_year = int(helpers.retrieve_current_year())
+    current_month_index = helpers.retrieve_current_month_index(month=current_month) + 1
+    month_calendar = helpers.retrieve_month_dates(year=current_year, month=current_month_index)
+    month_events = helpers.retrieve_all_events_in_month(Username=username, Month=current_month)
+    print(month_events)
+    return render_template('calendar(2).html', current_month=current_month, current_year=current_year,
+                           month_calendar=month_calendar, month_events=month_events)
+#route to display previous month
+@app.route('/prev/<string:month>', methods=['GET', 'POST'])
+@login_required
+def prev(month):
+    username = session.get('username', None)
+    prev_month, year = helpers.retrieve_previous_month(current_month=month)
+    current_month_index = helpers.retrieve_current_month_index(month=prev_month) + 1
+    month_calendar = helpers.retrieve_month_dates(year=year, month=current_month_index)
+    month_events = helpers.retrieve_all_events_in_month(Username=username, Month=prev_month)
+    return render_template('calendar(2).html', current_month=prev_month, current_year=year, go_back_to_current_date='Current Date!', month_calendar=month_calendar, month_events=month_events)
+#route to display next month
+@app.route('/next/<string:month>/<int:current_year>', methods=['GET', 'POST'])
+@login_required
+def next(month, current_year):
+    username = session.get('username', None)
+    next_month, year = helpers.retrieve_next_month(current_month=month, year=current_year)
+    current_month_index = helpers.retrieve_current_month_index(month=next_month) + 1
+    month_calendar = helpers.retrieve_month_dates(year=year, month=current_month_index)
+    month_events = helpers.retrieve_all_events_in_month(Username=username, Month=next_month)
+    return render_template('calendar(2).html', current_month=next_month, current_year=year, go_back_to_current_date='Current Date!', month_calendar=month_calendar, month_events=month_events)
+#route to go back to current date
+@app.route('/current_date', methods=['POST', 'GET'])
+@login_required
+def current_date():
+    username = session.get('username', None)
+    current_month = helpers.retrieve_current_month()
+    current_year = helpers.retrieve_current_year()
+    current_month_index = helpers.retrieve_current_month_index(month=current_month) + 1
+    month_calendar = helpers.retrieve_month_dates(year=current_year, month=current_month_index)
+    month_events = helpers.retrieve_all_events_in_month(Username=username, Month=current_month)
+    return render_template('calendar(2).html', current_month=current_month, current_year=current_year, month_calendar=month_calendar, month_events=month_events)
+#route to create new event in calendar
+@app.route('/new_event/<int:day>/<string:month>/<int:year>', methods=['GET', 'POST'])
+def new_event(day, month, year):
+    if request.method == 'GET':
+        return render_template('new_event.html', day=day, month=month, year=year)
+    else:
+        username = session.get('username', None)
+        title = request.form['title']
+        event = request.form['event']
+        helpers.add_new_event(Username=username,Title=title, Event=event, Day=day, Month=month, Year=year)
+        return redirect('/calendar')
+#route to view event at a specific date
+@app.route('/view_event/<int:day>/<string:month>/<int:year>', methods=['GET', 'POST'])
+def view_event(day, month, year):
+    username = session.get('username', None)
+    events_list = helpers.retrieve_events_on_date(Username=username, Day=day, Month=month, Year=year)
+    return render_template('view_event.html', events=events_list)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -226,10 +312,69 @@ def logout():
     session.clear()
     return redirect('/')
 
-@app.route('/settings', methods=['GET', 'POST'])
+#working on settings
+@app.route('/settings', methods=['POST', 'GET'])
 @login_required
 def settings():
-    return  "todo"
+    if request.method == 'POST':
+        return redirect('/settings')
+    else:
+        return render_template('settings.html')
+
+#username_change route
+@app.route('/username_change', methods=['POST', 'GET'])
+def username_change():
+    if request.method == 'POST':
+        return render_template('username_change.html')
+    else:
+        return render_template('username_change.html')
+@app.route('/new_username_change', methods=['POST', 'GET'])
+def new_username_change():
+    OldUsername = request.form['OUsername']
+    NewUsername = request.form['NUsername']
+    if request.method == 'POST':
+        helpers.change_username(old_username=OldUsername, new_username=NewUsername)
+        return "<h1>Username changed!\nPlease login again.</h1>"
+    else:
+        return '<h1>An error occured</h1>'
+
+#password change
+@app.route('/password_change', methods=['POST', 'GET'])
+def password_change():
+    if request.method == 'POST':
+        return render_template('password_change.html')
+    else:
+        return render_template('password_change.html')
+@app.route('/new_password_change', methods=['POST', 'GET'])
+def new_password_change():
+    id = session.get("user_id", None)
+    OldPassword = request.form['OPassword']
+    NewPassword = request.form['NPassword']
+    ConfirmPassword = request.form['CPassword']
+    hashed_password = helpers.retrieve_user_password_hash(id)
+    new_hashed_password = generate_password_hash(NewPassword, method='pbkdf2:sha256', salt_length=8)
+    if not check_password_hash(hashed_password, OldPassword):
+        return "<h1>Old Password is incorrect!</h1>"
+    if NewPassword != ConfirmPassword:
+        return"<h1>Passwords do not match!</h1>"
+    if request.method == 'POST':
+        helpers.change_password(old_password=hashed_password, new_password=new_hashed_password)
+        return "<h1>Password changed!Please login again</h1>"
+    else:
+        return "<h1>An error occured!</h1>"
+@app.route('/delete_account', methods=['POST', 'GET'])
+def delete_account():
+    if request.method == 'POST':
+        return render_template('confirm_account_deletion.html')
+    else:
+        return render_template('confirm_account_deletion.html')
+@app.route('/confirmed_account_deletion', methods=['POST', 'GET'])
+def confirmed_account_deletion():
+    if request.method == 'POST':
+        helpers.confirmed_account_deletion(Username=session.get('username', None))
+        return '<h1>ACCOUNT DELETED!</h1>'
+    else:
+        return '<h1>AN ERROR OCCURED</h1>'
 if __name__ == '__main__':
     # app.run(host='192.168.1.12', port=8082, debug=True, threaded=True)
     socketio.run(app, host='192.168.1.12', port=8082, debug=True)
