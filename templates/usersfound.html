@@ -1,0 +1,22 @@
+{% extends 'userpage_base_layout.html' %}
+
+{% block title %}
+Users Found
+{% endblock %}
+
+{% block body %}
+<h1>Users</h1>
+<table border="1px solid black">
+    <tr>
+        <th>Fullname</th>
+        <th>User</th>
+    </tr>
+    <br>
+    {% for usr in user %}
+    <tr>
+        <td>{{ usr[1] }}</td>
+        <td><a href="/request_add_user/{{ usr[0] }}">{{ usr[2] }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

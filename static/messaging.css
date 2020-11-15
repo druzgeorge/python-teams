@@ -1,0 +1,184 @@
+.menu{
+    background-color: cornflowerblue;
+    width: 100%;
+
+}
+
+.name{
+    color: goldenrod;
+}
+
+
+
+/*All the option menus*/
+.navbaritems{
+    padding-bottom: 30px;
+    list-style: none;
+    text-decoration: none;
+    display:flex;
+    justify-content: space-around;
+    list-style: none;
+    padding-top: 20px;
+    font-size: 16px;
+}
+.navbaritems li a {
+    text-decoration: none;
+}
+li a:hover{
+    color: yellow;
+    transition: all 1s ease;
+}
+
+.messagebox{
+
+    width: 700px;
+    border: 3px solid lavender;
+    border-radius: 15px;
+    padding: 50px;
+    justify-content: center;
+    margin: 20px;
+    height:auto;
+    position: absolute;
+    background-color: lavender;
+    overflow-y: auto;
+    height: 500px;
+}
+.message-send{
+    justify-content: center;
+    border-radius: 10px;
+    position: absolute;
+    bottom: 0;
+}
+
+.contact-name{
+    color: red;
+    font-size: 22px;
+
+}
+
+.sendbtn{
+    border-radius: 15px;
+    background-color: goldenrod;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.contacts{
+    display: inline;
+
+}
+
+.contact-list{
+    border: 3px solid cadetblue;
+    padding: 20px;
+    margin: 20px;
+    background-color: cadetblue;
+    border-radius: 10px;
+}
+.portfolios {
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  h3 {
+
+    word-break: break-all;
+    text-align: center;
+    font-size: 20px;
+  }
+
+  p{
+      text-align: center;
+      font-size: 18px;
+
+  }
+
+  .row {
+    margin: 16px -24px;
+  }
+
+  /* Add padding BETWEEN each column (if you want) */
+  .row,
+  .row > .column {
+    padding: 8px;
+  }
+
+  /* Create four equal columns that floats next to each other */
+  .column {
+    float: left;
+    width: 33%;
+  }
+
+  /* Clear floats after rows */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+   a:hover img{
+      filter:brightness(50%);
+      transition: all 1s ease;
+  }
+
+  /* Content */
+  .content {
+    background-color: white;
+    padding: 10px;
+  }
+
+  /* Responsive layout - makes a two column-layout instead of four columns */
+  @media screen and (max-width: 900px) {
+    .column {
+      width: 40%;
+    }
+
+    .messagebox{
+        width:50%
+    }
+    .message-send{
+        size: 30;
+    }
+  }
+
+  /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+  @media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+    }
+  }
+
+  /* Style the search field */
+form.search input[type=text] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+/* Style the submit button */
+form.search button {
+  float: left;
+  width: 20%;
+  padding: 10px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none; /* Prevent double borders */
+  cursor: pointer;
+}
+
+form.search button:hover {
+  background: #0b7dda;
+}
+
+/* Clear floats */
+form.search::after {
+  content: "";
+  clear: both;
+  display: table;
+}

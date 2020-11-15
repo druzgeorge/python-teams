@@ -1,0 +1,59 @@
+{% extends 'userpage_base_layout.html' %}
+{% block title %}Messages{% endblock %}
+
+{% block body %}
+
+<div class = "portfolios">
+    <div>
+        <form class="search" action="usersfound" method="POST">
+            <input type="text" placeholder="Search for users..." name="search">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+<!-- Portfolio Gallery Grid -->
+<div class="row">
+
+  <div class="column">
+    <div class="content">
+      <div class = "contact-list" >
+      <h2>Contacts</h2>
+          {% if chats_list %}
+      <ul class = "contacts">
+        {% for chat in chats_list %}
+          <li><a href="/specific_chat/{{ chat[0] }}">{{ chat[2] }}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
+          <h5>No chats here!</h5>
+          {% endif %}
+
+
+      </div>
+      </div>
+      </div>
+
+   <div class="column">
+    <div class="content">
+         <div class = "messagebox message_holder">
+            <p class="contact-name">{% block contact_name %}{% endblock %}</p>
+             <div>{% block history %}{% endblock %}</div>
+             <h3 style='color: #ccc;font-size: 30px;'></h3>
+            <form action="" method="POST" class="message-send" style="bottom:0;">
+                <input type="text" name="message" class="message-send" placeholder = "Type in your message" size="60">
+                <input type = "submit"  class="sendbtn" value="Send"/>
+            </form>
+
+    </div>
+    </div>
+  </div>
+</div>
+</div>
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script type="text/javascript">
+        {% block script %}{% endblock %}
+    </script>
+
+
+{% endblock %}

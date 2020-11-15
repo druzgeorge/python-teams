@@ -1,0 +1,79 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <title>Flask_Chat_App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/messaging.css') }}"/>
+  </head>
+  <body>
+    <div class="portfolios">
+       <div>
+        <form class="search" action="usersfound" method="POST">
+            <input type="text" placeholder="Search for users..." name="search">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="content">
+            <div class = "contact-list">
+              <h2>Contacts</h2>
+              <ul class="contacts">
+                <li>George</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+
+    <div class="column">
+      <div class="content">
+
+    <div class="messagebox message_holder">
+      <p>Contact Name</p>
+      <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
+       <form action="" method="POST" class="message-send" style="bottom:0;">
+      <input type="text" class="message-send" placeholder = "Type in your message" size="60"/>
+      <input type = "submit"  class="sendbtn" value="Send" style="text-align:right;right:0;"/>
+    </form>
+    </div>
+
+
+  </div>
+  </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script type="text/javascript">
+      var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+      socket.on( 'connect', function() {
+        socket.emit( 'my event', {
+          data: 'User Connected'
+        } )
+        var form = $( 'form.message-send' ).on( 'submit', function( e ) {
+          e.preventDefault()
+          let user_name = 'George'
+          let user_input = $( 'input.message-send' ).val()
+          socket.emit( 'my event', {
+            user_name : user_name,
+            message : user_input
+          } )
+          $( 'input.message' ).val( '' ).focus()
+        } )
+      } )
+      socket.on( 'my response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.user_name !== 'undefined' ) {
+          $( 'h3' ).remove()
+          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+        }
+      })
+    </script>
+
+  </body>
+  </html>
