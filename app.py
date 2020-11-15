@@ -124,7 +124,7 @@ def view_notification(id):
 def accept(id):
     username = session.get('username', None)
     sender = helpers.retrieve_notification_sender(Username=username, notification_id=id)
-    helpers.add_to_contacts(Sender=sender, Recepient=username)
+    helpers.add_to_contacts(Sender=sender, Recipient=username)
     return redirect('/home')
 
 @app.route('/decline/<int:id>', methods=['GET','POST'])
@@ -150,13 +150,13 @@ def chats():
 @login_required
 def specific_chat(id):
     username = session.get('username', None)
-    recepient = helpers.retrieve_contact_username(Username=username, id=id)
-    helpers.create_new_chat_table(Sender=username, Recepeint=recepient)
-    chats_history = helpers.retrieve_all_chats(Username=username, SpecificChat=recepient)
+    recipient = helpers.retrieve_contact_username(Username=username, id=id)
+    helpers.create_new_chat_table(Sender=username, Recipient=recipient)
+    chats_history = helpers.retrieve_all_chats(Username=username, SpecificChat=recipient)
     chats_list = helpers.retrieve_user_contact_list(Username=session.get('username', None))
     #todo: create specific_chat.html
     if request.method == 'GET':
-        return render_template('specific_chat.html', chats_history=chats_history, chats_list=chats_list, contact_name=recepient, sender=username, id=id, port = session.get('port', 5000))
+        return render_template('specific_chat.html', chats_history=chats_history, chats_list=chats_list, contact_name=recipient, sender=username, id=id, port = session.get('port', 5000))
     else:
         pass
 @socketio.on('my event')
@@ -174,10 +174,10 @@ def handle_my_send_msg(json, methods=['GET', 'POST']):
     print('Str Json: ', dict(json)['user_name'])
     message = str(dict(json)['message'])
     sender = str(dict(json)['user_name'])
-    recepient = str(dict(json)['recepient'])
-    helpers.update_message_history(Username=sender, SpecificChat=recepient, Message=message, Sent_By=sender)
+    recipient = str(dict(json)['recipient'])
+    helpers.update_message_history(Username=sender, SpecificChat=recipient, Message=message, Sent_By=sender)
     print(f'Chat list updated for {sender}')
-    print(f'Chat list updated for {recepient}')
+    print(f'Chat list updated for {recipient}')
 
 #search users function
 @app.route('/usersfound', methods=['GET', 'POST'])
@@ -203,10 +203,10 @@ def request_add_user(id):
         sender = request.form['from']
         if not sender:
             sender = session.get('username',None)
-        recepient_username = helpers.retrieve_user_with_id(id)
-        helpers.add_notification(Username=recepient_username, title=title, message=message, sender=sender)
+        recipient_username = helpers.retrieve_user_with_id(id)
+        helpers.add_notification(Username=recipient_username, title=title, message=message, sender=sender)
         return helpers.success(title="Sent Request!", msg=f'Successfully sent friend'
-                                                          f' request to {recepient_username}', links='messaging', method='GET')
+                                                          f' request to {recipient_username}', links='messaging', method='GET')
     else:
         return render_template('friend_request.html', id=id)
 #projects

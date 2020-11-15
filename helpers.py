@@ -119,7 +119,7 @@ def retrieve_user_contact_info(Username, Contact):
     except sqlite3.OperationalError as e:
         print(e)
 #function to add new_chat_users to each other's contacts
-def add_to_contacts(Sender, Recepient):
+def add_to_contacts(Sender, Recipient):
     conn1 = None
     conn2 = None
     conn3 = None
@@ -129,23 +129,23 @@ def add_to_contacts(Sender, Recepient):
         c1 = conn1.cursor()
         c1.execute('''SELECT * FROM users WHERE username = :sender''', (Sender,))
         sender_info = list(c1.fetchall())
-        c1.execute('''SELECT * FROM users WHERE username = :recepient''', (Recepient,))
-        recepient_info = list(c1.fetchall())
+        c1.execute('''SELECT * FROM users WHERE username = :recipient''', (Recipient,))
+        recipient_info = list(c1.fetchall())
         conn1.close()
         print('SENDER INFO: ', sender_info[0][1:-1])
-        print('Recepient INFO: ', recepient_info[0][1:-1])
-        #insert tuple results into both recepient and sender's contacts
-        #working on recepient's table first
+        print('Recipient INFO: ', recipient_info[0][1:-1])
+        #insert tuple results into both recipient and sender's contacts
+        #working on recipient's table first
         conn2 = sqlite3.connect(contacts_db)
         c2 = conn2.cursor()
         #get rid of the id because it will conflict  in the contacts db's id
-        c2.execute(f'''INSERT INTO {Recepient}_contacts(fullname, username, email) VALUES (?,?,?)''', sender_info[0][1:-1])
+        c2.execute(f'''INSERT INTO {Recipient}_contacts(fullname, username, email) VALUES (?,?,?)''', sender_info[0][1:-1])
         conn2.commit()
         conn2.close()
         #working on sender's table secondly
         conn3 = sqlite3.connect(contacts_db)
         c3 = conn3.cursor()
-        c3.execute(f'''INSERT INTO {Sender}_contacts(fullname, username, email) VALUES (?,?,?)''', recepient_info[0][1:-1])
+        c3.execute(f'''INSERT INTO {Sender}_contacts(fullname, username, email) VALUES (?,?,?)''', recipient_info[0][1:-1])
         conn3.commit()
         conn3.close()
     except sqlite3.OperationalError as e:
@@ -165,14 +165,14 @@ def retrieve_contact_username(Username, id):
         print(e)
 #function to create user chats
 chats_db = 'users/chats.db'
-def create_new_chat_table(Sender, Recepeint):
+def create_new_chat_table(Sender, Recipient):
     conn = None
     try:
         conn = sqlite3.connect(chats_db)
         c = conn.cursor()
-        c.execute(f'''CREATE TABLE IF NOT EXISTS {Sender}_{Recepeint}_chats(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, sent_by VARCHAR(20), Message TEXT, Participation VARCHAR(10), date_sent DATETIME)''')
+        c.execute(f'''CREATE TABLE IF NOT EXISTS {Sender}_{Recipient}_chats(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, sent_by VARCHAR(20), Message TEXT, Participation VARCHAR(10), date_sent DATETIME)''')
         conn.commit()
-        c.execute(f'''CREATE TABLE IF NOT EXISTS {Recepeint}_{Sender}_chats(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, sent_by VARCHAR(20), Message TEXT, Participation VARCHAR(10), date_sent DATETIME)''')
+        c.execute(f'''CREATE TABLE IF NOT EXISTS {Recipient}_{Sender}_chats(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, sent_by VARCHAR(20), Message TEXT, Participation VARCHAR(10), date_sent DATETIME)''')
         conn.commit()
         conn.close()
         return
@@ -594,9 +594,8 @@ def confirmed_account_deletion(Username):
         conn.close()
         conn = sqlite3.connect(contacts_db)
         c = conn.cursor()
-        c.execute(f'''DROP TABLE {Username}_conatcts''')
+        c.execute(f'''DROP TABLE {Username}_contacts''')
         conn.commit()
         conn.close()
     except sqlite3.OperationalError as e:
         print(e)
-
