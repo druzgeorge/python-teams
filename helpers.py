@@ -32,7 +32,6 @@ def create_users_db(DB):
 
 
 #add user  to users/users.db file
-#todo: find  how cs50 stored password hash in their database!
 def add_user(Fullname, Username, Email, Hash):
     # todo: make username distinct
     conn = None
