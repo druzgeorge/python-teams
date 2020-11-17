@@ -26,9 +26,19 @@ After using many collaborative platforms such as repl.it, Microsoft Teams, etc, 
   ```python3
   socket.run(app, host='your_ipv6_address', port='your_port_number_choice')
   ```
+  - Determine IPV6 Address
   - To determine your ipv6 address on linux run ifconfig.Under your wireless card's(eg.)WLAN0) descriptions output, search for inet and the number that follows is your ipv6 address
 ![Image of ifconfig](https://github.com/druzgeorge/python-teams/blob/main/screenshots/ifconfig_screenshot.png) 
-
+- To determine IPv6 address on Windows
+```bash
+Type “ipconfig/all” on the blinking cursor then press [Enter]. NOTE: You will find the IPv6 Address network details under the Ethernet adapter Local Area Connection section.
+```
+- To determine IPv6 address on Mac
+- Try ifconfig
+```bash
+ifoncig
+```
+- Try the method here : https://www.macobserver.com/tmo/article/how-to-obtain-the-ipv6-address-of-your-mac-and-ipad
 #### Features:
 ##### Home Page:
 - Contains notifications of user
