@@ -32,6 +32,7 @@ def create_users_db(DB):
 
 
 #add user  to users/users.db file
+#todo: find  how cs50 stored password hash in their database!
 def add_user(Fullname, Username, Email, Hash):
     # todo: make username distinct
     conn = None
@@ -313,8 +314,10 @@ def retrieve_content_of_notifications(Username, id):
         c = conn.cursor()
         c.execute(f'''SELECT content FROM {Username}_notifications WHERE id = :id''', (id,))
         message = list(c.fetchall()[0])[0]
+        c.execute(f'''SELECT sent_by FROM {Username}_notifications WHERE id = :id''', (id,))
+        sent_by = list(c.fetchall()[0])[0]
         conn.close()
-        return message
+        return message, sent_by
     except sqlite3.OperationalError as e:
         print(e)
 #function to retrieve user's username based on their id
@@ -536,7 +539,10 @@ def retrieve_events_on_date(Username, Day,Month,Year):
         return events_list
     except sqlite3.OperationalError as e:
         print(e)
-
+#function to retrieve current date day
+def retrieve_current_day():
+    today = int(datetime.today().day)
+    return today
 '''SETTINGS METHODS BELOW'''
 # from werkzeug.security import check_password_hash
 def change_username(old_username, new_username):

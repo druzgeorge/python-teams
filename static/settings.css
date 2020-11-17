@@ -1,0 +1,50 @@
+.menu{
+    background-color: cornflowerblue;
+
+}
+
+.name{
+    color: goldenrod;
+}
+
+
+
+/*All the option menus*/
+ul{
+    padding-bottom: 30px;
+    list-style: none;
+    text-decoration: none;
+    display:flex;
+    justify-content: space-around;
+    list-style: none;
+    padding-top: 20px;
+    font-size: 16px;
+}
+
+li a {
+    text-decoration: none;
+    list-style: none;
+}
+li a:hover{
+    text-decoration: none;
+    color: yellow;
+    transition: all 1s ease;
+}
+.setting{
+    display: block;
+    width: 20%;
+    background-color: cornflowerblue;
+    
+    border: 3px solid goldenrod;
+    border-radius: 0px;
+    padding: 20px;
+    margin: 20px;
+}
+
+.settingunder{
+    text-decoration: none;
+    color: red;
+    font-size: 25px;
+    
+
+}

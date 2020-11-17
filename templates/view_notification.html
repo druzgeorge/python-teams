@@ -6,7 +6,8 @@ Notification Content
 
 {% block body %}
 <div class="container">
-    <p>{{ content }}</p>
+    <b>Sent By: </b><p>{{ sent_by }}</p>
+    <b>Conent: </b> <p>{{ content }}</p>
     <form action="/accept/{{ id }}" method="POST">
         <input type="submit" value="Accept" class="btn btn-primary">
     </form>

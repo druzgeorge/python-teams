@@ -1,10 +1,10 @@
-{% extends 'userpage_base_layout.html' %}
+{% extends 'universalform.html' %}
 
 {% block title %}
     Change Username
 {% endblock %}
 
-{% block body %}
+{% block form %}
     <form action="/new_username_change" method="POST">
     <input type="text" placeholder="Old Username" name="OUsername">
     <br>

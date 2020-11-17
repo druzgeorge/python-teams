@@ -5,6 +5,9 @@ Calendar
 {% endblock %}
 
 {% block body %}
+    <div class="month" style="text-align:center;gravity:center;">
+        <b>Today: </b><p>{{ current_month }} {{ current_day }}</p>
+    </div>
     <div class="month">
   <ul>
     <li class="prev"><a href="/prev/{{ current_month }}">&#10094;</a></li>
@@ -29,9 +32,17 @@ Calendar
         <tr>
             {% for date in dates %}
                 {% if date in month_events.keys() %}
-                    <td class="event_date"><a href="/view_event/{{ date }}/{{ current_month }}/{{ current_year }}">{{ date }}</a></td>
+                    {% if date == current_day %}
+                        <th class="daysactive daysevent"><a href="/view_event/{{ date }}/{{ current_month }}/{{ current_year }}">{{ date }}</a></th>
+                    {% else %}
+                        <th class="daysevent"><a href="/view_event/{{ date }}/{{ current_month }}/{{ current_year }}">{{ date }}</a></th>
+                    {% endif %}
                 {% else %}
-                    <td><a href="/new_event/{{ date }}/{{ current_month }}/{{ current_year }}">{{ date }}</a></td>
+                    {% if date == current_day %}
+                        <th class="daysactive"><a href="/new_event/{{ date }}/{{ current_month }}/{{ current_year }}">{{ date }}</a></th>
+                    {% else %}
+                        <th><a href="/new_event/{{ date }}/{{ current_month }}/{{ current_year }}">{{ date }}</a></th>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         </tr>
@@ -50,5 +61,5 @@ Calendar
         {% endif %}
     </ul>
 </div>
-
+<p style="text-align:left end;">Key: cornflowerblue => active day, red => event day!</p>
 {% endblock %}

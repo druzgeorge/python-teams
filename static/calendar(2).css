@@ -91,7 +91,7 @@ th{
   text-align: center;
 }
 
-td{
+.days {
   list-style-type: none;
   width: 8.6%;
   vertical-align: text-top;
@@ -102,7 +102,47 @@ td{
   margin-bottom: 15px;
   font-size:12px;
   color:cadetblue;
-  
+}
+
+.daysactive{
+  list-style-type: none;
+  width: 8.6%;
+  vertical-align: text-top;
+  /*text-align: left;*/
+  border-bottom: 90px;
+  border-right: 50px;
+  border-style: solid;
+  margin-bottom: 15px;
+  font-size:12px;
+  color:cornflowerblue;
+
+}
+
+.daysevent{
+  list-style-type: none;
+  width: 8.6%;
+  vertical-align: text-top;
+  /*text-align: left;*/
+  border-bottom: 90px;
+  border-right: 50px;
+  border-style: solid;
+  margin-bottom: 15px;
+  font-size:12px;
+  color:red;
+
+}
+
+td{
+  list-style-type: none;
+
+  /*text-align: left;*/
+  border-bottom: 10px;
+  border-right: 50px;
+  border-style: solid;
+  margin-bottom: 1px;
+  font-size:12px;
+  color:cadetblue;
+  text-align: center;
 
 }
 
@@ -168,9 +208,3 @@ td{
 
   }
 }
-.event_date
-    {
-    padding: 5px;
-    background: black;
-    color: white !important
-    }

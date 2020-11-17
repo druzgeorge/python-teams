@@ -7,6 +7,8 @@
     <link href = "{{ url_for('static', filename='register.css') }}" rel="stylesheet">
     <link href = "{{ url_for('static', filename='/messaging.css')}}" rel = "stylesheet">
     <link href = "{{ url_for('static', filename='/index.css')}}" rel = "stylesheet">
+     <link href = "{{ url_for('static', filename='/settings.css') }}" rel="stylesheet">
+     <link href = "{{ url_for('static', filename='/notifications.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='calendar(2).css') }}">
@@ -20,9 +22,10 @@
 
 <body>
 {% block body_head %}
+<div class="name">
 <nav class="navbar navbar-expand-md navbar-light bg-light border name">
-    <a class="navbar-brand" href="/"><span class="blue">P</span></a>
-    <a class="navbar-brand" href="/"><span class="blue">Y</span></a><a class="navbar-brand" href="/"><span class="blue">T</span></a><a class="navbar-brand" href="/"><span class="blue">H</span></a><a class="navbar-brand" href="/"><span class="blue">O</span></a><a class="navbar-brand" href="/"><span class="blue">N</span></a><a class="navbar-brand" href="/"><span class="blue"></span></a><a class="navbar-brand" href="/"><span class="blue">T</span></a><a class="navbar-brand" href="/"><span class="blue">E</span></a><a class="navbar-brand" href="/"><span class="blue">A</span></a><a class="navbar-brand" href="/"><span class="blue">M</span></a><a class="navbar-brand" href="/"><span class="blue">S</span></a>
+    <a class="navbar-brand" href="/"><span class="name">P</span></a>
+    <a class="navbar-brand" href="/"><span class="name">Y</span></a><a class="navbar-brand" href="/"><span class="name">T</span></a><a class="navbar-brand" href="/"><span class="name">H</span></a><a class="navbar-brand" href="/"><span class="name">O</span></a><a class="navbar-brand" href="/"><span class="name">N</span></a><a class="navbar-brand" href="/"><span class="name"></span></a><a class="navbar-brand" href="/"><span class="name">T</span></a><a class="navbar-brand" href="/"><span class="name">E</span></a><a class="navbar-brand" href="/"><span class="name">A</span></a><a class="navbar-brand" href="/"><span class="name">M</span></a><a class="navbar-brand" href="/"><span class="name">S</span></a>
     <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -30,13 +33,13 @@
         <ul class="navbar-nav ml-auto mt-2">
             {% block li %} {% endblock %}
         </ul>
-            <ul class="navbar-nav ml-auto mt-2" style="text-align: right;">
+            <ul class="navbar-nav ml-auto mt-2 " style="text-align: right;">
                  <li class="nav-item"><a class="nav-link" href="/settings">Settings</a></li>
                 <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
             </ul>
-
     </div>
 </nav>
+</div>
 {% endblock %}
 
 {% block body %}

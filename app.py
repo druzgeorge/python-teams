@@ -100,12 +100,28 @@ def main_page():
     username = session['username']
     try:
         notifications = (helpers.retrieve_user_notifications(Username=username))
+        notifications_count = len(notifications)
         print('notifications: ', notifications)
         print(len(notifications))
     except:
         notifications = None
     if request.method == 'GET':
-        return render_template('main_user_page.html', notifications=notifications)
+        return render_template('main_user_page.html', notifications=notifications, notifications_count=notifications_count)
+    else:
+        pass
+#route to display notifications to users
+@app.route('/notifications', methods=['GET', 'POST'])
+@login_required
+def notifications():
+    username = session['username']
+    try:
+        notifications = (helpers.retrieve_user_notifications(Username=username))
+        notifications_count = len(notifications)
+    except:
+        notifications = None
+    if request.method == 'GET':
+        return render_template('notifications.html', notifications=notifications,
+                               notifications_count=notifications_count)
     else:
         pass
 #view to display notification content
@@ -115,8 +131,8 @@ def view_notification(id):
     if request.method == 'GET':
         username = session.get('username', None)
         helpers.set_seen(Username=username, notification_id=id)
-        content = helpers.retrieve_content_of_notifications(Username=username, id=id)
-        return render_template('view_notification.html', content=content, id=id)
+        content, sent_by = helpers.retrieve_content_of_notifications(Username=username, id=id)
+        return render_template('view_notification.html', content=content, id=id, sent_by=sent_by)
     else:
         pass
 @app.route('/accept/<int:id>', methods=['GET','POST'])
@@ -154,7 +170,6 @@ def specific_chat(id):
     helpers.create_new_chat_table(Sender=username, Recipient=recipient)
     chats_history = helpers.retrieve_all_chats(Username=username, SpecificChat=recipient)
     chats_list = helpers.retrieve_user_contact_list(Username=session.get('username', None))
-    #todo: create specific_chat.html
     if request.method == 'GET':
         return render_template('specific_chat.html', chats_history=chats_history, chats_list=chats_list, contact_name=recipient, sender=username, id=id, port = session.get('port', 5000))
     else:
@@ -254,9 +269,10 @@ def calendar():
     current_month_index = helpers.retrieve_current_month_index(month=current_month) + 1
     month_calendar = helpers.retrieve_month_dates(year=current_year, month=current_month_index)
     month_events = helpers.retrieve_all_events_in_month(Username=username, Month=current_month)
+    current_day = helpers.retrieve_current_day()
     print(month_events)
     return render_template('calendar(2).html', current_month=current_month, current_year=current_year,
-                           month_calendar=month_calendar, month_events=month_events)
+                           month_calendar=month_calendar, month_events=month_events, current_day = current_day)
 #route to display previous month
 @app.route('/prev/<string:month>', methods=['GET', 'POST'])
 @login_required

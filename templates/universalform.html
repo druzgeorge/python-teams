@@ -1,0 +1,12 @@
+{% extends 'userpage_base_layout.html' %}
+<head>
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+</head>
+
+{% block body %}
+        <div class="signup-form">
+                {% block form %}{% endblock %}
+        </div>
+{% endblock %}

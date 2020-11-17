@@ -1,43 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% block title %} Settings {% endblock %}
-    <style>
-        .container
-        {
-            background: white;
-            border: 2px solid black;
-            height: 80%;
-            width: 80%;
-            margin: 0 auto;
-            left: 50%;
-            right:50%;
-            top: 50%;
-            bottom: 50%;
-        }
-        .active
-        {
-            background: green;
-            border: 1px solid black;
-            height: 10px;
-            width: 11px;
-        }
-        .danger
-        {
-            background: red;
-            border: 1px solid black;
-            height: 10px;
-            width: 11px;
-        }
-    </style>
-</head>
+{% extends 'userpage_base_layout.html' %}
+
+{% block title %} Settings {% endblock %}
+
 {% block body %}
 <header>Settings</header>
-<div class="container">
-    <h5 class="active"><a href="/username_change" method="POST">Change Username</a></h5>
-    <h5 class="active"><a href="/password_change" method="POST">Change Password</a></h5>
-    <h5 class="danger"><a href="/delete_account" method="POST">Delete Account</a></h5>
+<div class="settingsnav">
+    <ul class="setting">
+    <li class="settingunder"><a href="/username_change" method="POST">Change Username</a></li>
+    <li class="settingunder"><a href="/password_change" method="POST">Change Password</a></li>
+    <li class="settingunder"><a href="/delete_account" method="POST">Delete Account</a></li>
+    </ul>
 </div>
 {% endblock %}
-</html>

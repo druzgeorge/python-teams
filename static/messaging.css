@@ -46,8 +46,9 @@ li a:hover{
 .message-send{
     justify-content: center;
     border-radius: 10px;
-    position: absolute;
     bottom: 0;
+    position: fixed;
+
 }
 
 .contact-name{
@@ -139,6 +140,8 @@ li a:hover{
     }
     .message-send{
         size: 30;
+
+
     }
   }
 
