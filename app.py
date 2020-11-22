@@ -173,7 +173,7 @@ def specific_chat(id):
     if request.method == 'GET':
         return render_template('specific_chat.html', chats_history=chats_history, chats_list=chats_list, contact_name=recipient, sender=username, id=id, port = session.get('port', 5000))
     else:
-        pass
+        return render_template('specific_chat.html', chats_history=chats_history, chats_list=chats_list, contact_name=recipient, sender=username, id=id, port=session.get('port', 5000))
 @socketio.on('my event')
 def handle_my_custom_event(json, methods=['GET', 'POST']):
     print('received my event: ' + str(json))

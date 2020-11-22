@@ -7,7 +7,7 @@
 {% block history %}
     {% if  chats_history %}
         {% for chat in chats_history %}
-            <h4 style="color: #000"><b>{{ chat[1] }}</b>{{ chat[2] }}</h4>
+            <h4 style="color: #000"><b>{{ chat[1] }} </b>{{ chat[2] }}</h4>
         {% endfor %}
     {% else %}
         <h3 style='color: #ccc;font-size: 30px;'>No chats here yet</h3>
@@ -25,11 +25,11 @@
           e.preventDefault()
           let user_name = '{{ sender }}'
           let user_input = $( 'input.message-send' ).val()
-          let recepient = '{{ contact_name }}'
+          let recipient = '{{ contact_name }}'
           socket.emit( 'send_msg', {
             user_name : user_name,
             message : user_input,
-            recepient : recepient
+            recipient : recipient
           } )
           $( 'input.message' ).val( '' ).focus()
         } )
